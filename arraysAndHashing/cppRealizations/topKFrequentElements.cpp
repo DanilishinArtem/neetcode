@@ -9,13 +9,21 @@ vector<int> topKFrequent(vector<int>& nums, int k) {
     map<int,int> count;
     vector<vector<int>> frequency(nums.size()+1);
     for(const int& item : nums){
-        count[item] += count[item] + 1;
+        count[item] += 1;
     }
     for(pair<int, int> item : count){
-        auto temp = frequency[item.second];
-        temp.insert(item.first);
-        // frequency.at(item.second).insert;
-    }      
+        frequency[item.second].push_back(item.first);
+    }
+    vector<int> result{};
+    for(int i = nums.size(); i > 0; i--){
+        if(result.size() == k){
+            break;
+        }
+        for(const int& item : frequency[i]){
+            result.push_back(item);
+        }
+    }
+    return result;
 }
 
 int main(){
