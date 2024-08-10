@@ -16,7 +16,43 @@ struct ListNode {
 class Solution {
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
-        
+        if(lists.size() == 0) return nullptr;
+        while(lists.size() > 1){
+            vector<ListNode*> mergedLists;
+            for(int i = 0; i < lists.size(); i+=2){
+                ListNode* l1 = lists[i];
+                // ListNode* l2 = lists[i + 1];
+                ListNode* l2;
+                if(i + 1 < lists.size()){
+                    l2 = lists[i + 1];
+                }else{
+                    l2 = nullptr;
+                }
+                mergedLists.push_back(mergeLists(l1, l2));
+            }
+            lists = mergedLists;
+        }
+        return lists[0];
+    }
+
+    ListNode* mergeLists(ListNode* l1, ListNode* l2) {
+        if(l1 == nullptr) return l2;
+        if(l2 == nullptr) return l1;
+        ListNode* dummy = new ListNode();
+        ListNode* tail = dummy;
+        while(l1 && l2){
+            if(l1->val < l2->val){
+                tail->next = l1;
+                l1 = l1->next;
+            }else{
+                tail->next = l2;
+                l2 = l2->next;
+            }
+            tail = tail->next;
+        }
+        if(l1) tail->next = l1;
+        if(l2) tail->next = l2;
+        return dummy->next;
     }
 };
 
