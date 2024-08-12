@@ -1,6 +1,6 @@
 #include <vector>
 #include <iostream>
-
+#include <queue>
 using namespace std;
 
 
@@ -8,15 +8,24 @@ class KthLargest {
 public:
     KthLargest(int k, vector<int>& nums) {
         k_ = k;
-        nums_ = nums;
+        for(auto num : nums){
+            minHeap.push(num);
+        }
+        while(minHeap.size() > k_){
+            minHeap.pop();
+        }
     }
     
     int add(int val) {
-        
+        minHeap.push(val);
+        if(minHeap.size() > k_){
+            minHeap.pop();
+        }
+        return minHeap.top();
     }
 private:
     int k_;
-    vector<int> nums_;
+    priority_queue<int, vector<int>, greater<int>> minHeap;
 };
 
 
