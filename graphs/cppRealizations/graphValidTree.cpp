@@ -9,7 +9,32 @@ using namespace std;
 class Solution {
 public:
     bool validTree(int n, vector<vector<int>>& edges) {
-
+        for(int i = 0; i < edges.size(); i++){
+            adj[edges[i][0]].push_back(edges[i][1]);
+            adj[edges[i][1]].push_back(edges[i][0]);
+        }
+        if(dfs(0, -1) == true && n == visited.size()){
+            return true;
+        }
+        return false;
+    }
+private:
+    map<int, vector<int>> adj;
+    set<int> visited;
+    bool dfs(int i, int prev){
+        if(visited.find(i) != visited.end()){
+            return false;
+        }
+        visited.insert(i);
+        for(auto j : adj[i]){
+            if(j == prev){
+                continue;
+            }
+            if(!dfs(j, i)){
+                return false;
+            }
+        }
+        return true;
     }
 };
 
@@ -44,8 +69,9 @@ ostream& operator<<(ostream& out, const vector<vector<T>>& str){
 }
 
 int main(){
-    int n = 5;
-    vector<vector<int>> edges = {{0,1},{0,2},{0,3},{1,4}};
+    int n = 4;
+    vector<vector<int>> edges = {{0,1},{2,3}};
+    // vector<vector<int>> edges = {{0,1},{0,2},{0,3},{1,4}};
     cout << "Input: n = " << n << ", edges = " << edges << endl;
     cout << "Solution: " << Solution().validTree(n, edges) << endl;
     return 0;
