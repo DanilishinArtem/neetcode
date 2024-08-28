@@ -9,7 +9,38 @@ using namespace std;
 class Solution {
 public:
     vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
-        
+        for(int i = 0; i < prerequisites.size(); i++){
+            prereq[prerequisites[i][0]].push_back(prerequisites[i][1]);
+        }
+        for(int c = 0; c < numCourses; c++){
+            if(!dfs(c)){
+                return {};
+            }
+        }
+        return output;
+    }
+private:
+    set<int> visit;
+    set<int> cycle;
+    vector<int> output;
+    map<int, vector<int>> prereq;
+    bool dfs(int crs){
+        if(cycle.find(crs) != cycle.end()){
+            return false;
+        }
+        if(visit.find(crs) != visit.end()){
+            return true;
+        }
+        cycle.insert(crs);
+        for(auto n : prereq[crs]){
+            if(!dfs(n)){
+                return false;
+            }
+        }
+        cycle.erase(crs);
+        visit.insert(crs);
+        output.push_back(crs);
+        return true;
     }
 };
 
