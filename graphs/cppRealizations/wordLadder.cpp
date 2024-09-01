@@ -1,6 +1,11 @@
+#include <map>
 #include <vector>
 #include <string>
+#include <set>
+#include <queue>
 #include <iostream>
+#include <algorithm>
+
 
 using namespace std;
 
@@ -8,7 +13,46 @@ using namespace std;
 class Solution {
 public:
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        if(find(wordList.begin(), wordList.end(), endWord) == wordList.end()){
+            return 0;
+        }
         
+        map<string, vector<string>> nei;
+        wordList.push_back(beginWord);
+        for(auto word : wordList){
+            for(int j = 0; j < word.size(); j++){
+                string pattern = word.substr(0, j) + "*" + word.substr(j + 1);
+                nei[pattern].push_back(word);
+            }
+        }
+
+        set<string> visited;
+        queue<string> q;
+        q.push(beginWord);
+        visited.insert(beginWord);
+        int res = 1;
+
+        while(!q.empty()){
+            int levelSize = q.size();
+            for(int i = 0; i < levelSize; i++){
+                string word = q.front();
+                q.pop();
+                if(word == endWord){
+                    return res;
+                }
+                for(int j = 0; j < word.size(); j++){
+                    string pattern = word.substr(0, j) + "*" + word.substr(j + 1);
+                    for(auto neiWord : nei[pattern]){
+                        if(visited.find(neiWord) == visited.end()){
+                            q.push(neiWord);
+                            visited.insert(neiWord);
+                        }
+                    }
+                }
+            }
+            res += 1;
+        }
+        return 0;
     }
 };
 
