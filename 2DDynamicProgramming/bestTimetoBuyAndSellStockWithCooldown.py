@@ -1,0 +1,30 @@
+class Solution:
+    def maxProfit(self, prices: list[int]) -> int:
+        # state: buing/selling
+        # if buy -> i + 1
+        # if sell -> i + 2
+
+        dp = {} # key=(i,buying), value=maxProfit
+
+        def dfs(i, buying):
+            if i >= len(prices):
+                return 0
+            if (i, buying) in dp:
+                return dp[(i, buying)]
+            
+            cooldown = dfs(i+1, buying)
+            if buying:
+                buy = dfs(i+1, not buying) - prices[i]
+                dp[(i, buying)] = max(buy, cooldown)
+            else:
+                sell = dfs(i+2, not buying) + prices[i]
+                dp[(i, buying)] = max(sell, cooldown)
+            return dp[(i, buying)]
+
+        return dfs(0, True)
+
+
+if __name__ == "__main__":
+    prices = [1, 2, 3, 0, 2]
+    print(f'Input: {prices}')
+    print(f'Output: {Solution().maxProfit(prices)}')
